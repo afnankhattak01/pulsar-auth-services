@@ -4,10 +4,9 @@ const { CreateToken } = require("../jwt/jwt");
 const { ValidationFunction } = require("../commom/validationfunction");
 
 const UserLogin = async (req, res) => {
+  let isSucess = false;
 
-let isSucess = false;
-
-let errorMsg = "user"
+  let errorMsg = "user";
 
   const { email, password } = req.body;
   if (email && password) {
@@ -58,6 +57,7 @@ const UserSignup = async (req, res) => {
 
   if (credentials && Object.keys(credentials).length > 0) {
     const { email, password } = credentials;
+
     try {
       let user = await userModel.Signup(email, password);
 
