@@ -15,7 +15,7 @@ app.use("/api/workouts", workOutPage);
 app.use("/api/user", User);
 
 mongoose
-  .connect(`mongodb://0.0.0.0:27017/mern`)
+  .connect(process.env.CONNECTION_STRING)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`connected to db && server is up and running on ${PORT} !!`);
