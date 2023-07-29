@@ -51,21 +51,6 @@ let errorMsg = "user"
       success: false,
     });
   }
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
 };
 
 const UserSignup = async (req, res) => {
@@ -86,6 +71,7 @@ const UserSignup = async (req, res) => {
         });
       }
     } catch (error) {
+      console.log("error", error);
       return res.status(400).json({
         success: false,
         message: "failed to store user, try again!",
