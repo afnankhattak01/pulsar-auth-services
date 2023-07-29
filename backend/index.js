@@ -2,7 +2,6 @@ require("dotenv").config();
 const PORT = process.env.PORT || 3001;
 const uri = process.env.CONNECTION_STRING;
 
-
 const express = require("express");
 const mongoose = require("mongoose");
 const MongoClient = require("mongodb").MongoClient;
@@ -21,13 +20,16 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
 });
 
-
 async function run() {
   try {
-    await client.connect().then(()=>{
-      console.log("connected to db");
+    await client.connect().then(() => {
+      app.listen(PORT, () => {
+        console.log(
+          `connected to db && server is up and running on ${PORT} !!`
+        );
+      });
     });
-    const coll = client.db('test').collection('movies');
+    const coll = client.db("test").collection("movies");
     const cursor = coll.find();
     await cursor.forEach(console.dir);
   } finally {
