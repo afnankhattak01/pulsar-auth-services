@@ -4,9 +4,16 @@ const uri = process.env.CONNECTION_STRING;
 
 const express = require("express");
 const mongoose = require("mongoose");
+var cors = require("cors");
+
 const app = express();
 
 // middleware
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 
 const workOutPage = require("./routes/workout");
