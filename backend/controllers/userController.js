@@ -4,9 +4,6 @@ const { CreateToken } = require("../jwt/jwt");
 const { ValidationFunction } = require("../commom/validationfunction");
 
 const UserLogin = async (req, res) => {
-  let isSucess = false;
-
-  let errorMsg = "user";
 
   const { email, password } = req.body;
   if (email && password) {
@@ -53,10 +50,23 @@ const UserLogin = async (req, res) => {
 };
 
 const UserSignup = async (req, res) => {
-  const credentials = await ValidationFunction(req.body);
+  let validatonError = null;
 
-  if (credentials && Object.keys(credentials).length > 0) {
-    const { email, password } = credentials;
+  try {
+    const credentials = await ValidationFunction(req.body);
+  } catch (error) {
+    validatonError = error;
+    return res.status(403).json({
+      success: false,
+      message: "failed to create new user, validation error try again!",
+      data: {
+        error: error.details ? error.details : error,
+      },
+    });
+  }
+
+  if (!validatonError) {
+    const { email, password } = req.body;
 
     try {
       let user = await userModel.Signup(email, password);
@@ -65,23 +75,29 @@ const UserSignup = async (req, res) => {
         const token = CreateToken(user._id);
         return res.status(200).json({
           success: true,
-          token,
           message: "User Created Sucessfully!",
-          email: user.email,
+          data: {
+            token,
+            email: user.email,
+          },
         });
       }
     } catch (error) {
-      console.log("error", error);
       return res.status(400).json({
         success: false,
-        message: "failed to store user, try again!",
-        error: error,
+        message: "Failed to create new user!",
+        data: {
+          error: error.message,
+        },
       });
     }
   } else {
     return res.status(500).json({
       success: false,
       message: "failed to store user, try again!",
+      data: {
+        error: validatonError,
+      },
     });
   }
 };
